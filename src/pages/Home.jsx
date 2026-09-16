@@ -7,6 +7,9 @@ function Home() {
   const [statut, setStatut] = useState('chargement')
 
   useEffect(() => {
+    // Pas de drapeau d'annulation ici, contrairement à ArticleDetail : l'effet
+    // ne part qu'une fois ([] en dépendances), donc aucune requête concurrente
+    // ne peut écraser le résultat d'une autre.
     client
       .getEntries({ content_type: 'article' })
       .then((response) => {
