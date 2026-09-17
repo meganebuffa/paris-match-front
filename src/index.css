@@ -1,40 +1,38 @@
 /* ==========================================================================
-   Base et variables de design
+   Identité et base
 
-   Tout le style du site part d'ici. Chaque composant pioche dans ces
-   variables plutôt que d'écrire des valeurs en dur : changer une ligne
-   ici met à jour tout le site.
-
-   Les valeurs ci-dessous sont des points de départ neutres, à remplacer.
+   Toutes les valeurs du site partent d'ici. Les composants ne contiennent
+   aucune couleur ni taille en dur : ils piochent dans ces variables.
    ========================================================================== */
 
 :root {
-  /* --- Couleurs ------------------------------------------------------- */
-  --couleur-fond: #ffffff;
-  --couleur-fond-doux: #f6f6f6;
-  --couleur-texte: #1a1a1a;
-  --couleur-texte-doux: #6b6b6b;
-  --couleur-bordure: #e2e2e2;
-  --couleur-accent: #c8102e; /* placeholder — à ajuster */
+  /* --- Couleurs -------------------------------------------------------- */
+  --rouge: #e2001a;
+  --rouge-sombre: #b30015;
+  --noir: #111111;
+  --blanc: #ffffff;
+  --gris-texte: #555555;
+  --gris-clair: #f5f5f5;
+  --gris-bordure: #dddddd;
 
-  /* --- Typographie ---------------------------------------------------- */
-  --police-titre: Georgia, 'Times New Roman', serif;
-  --police-texte: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* --- Typographie ------------------------------------------------------ */
+  --titre: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --lecture: Georgia, 'Times New Roman', serif;
 
-  /* --- Échelle d'espacements ------------------------------------------ */
+  /* --- Espacements ------------------------------------------------------ */
   --espace-xs: 0.25rem;
   --espace-s: 0.5rem;
   --espace-m: 1rem;
   --espace-l: 2rem;
-  --espace-xl: 3rem;
+  --espace-xl: 3.5rem;
 
-  /* --- Mise en page ---------------------------------------------------- */
-  --largeur-contenu: 1100px;
-  --largeur-article: 720px;
-  --rayon: 4px;
+  /* --- Mise en page ----------------------------------------------------- */
+  --largeur-site: 1180px;
+  --largeur-lecture: 680px;
 }
 
-/* --- Reset minimal ----------------------------------------------------- */
+/* --- Reset ------------------------------------------------------------- */
 
 *,
 *::before,
@@ -42,20 +40,28 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: var(--police-texte);
+  font-family: var(--sans);
+  font-size: 1rem;
   line-height: 1.6;
-  color: var(--couleur-texte);
-  background: var(--couleur-fond);
+  color: var(--noir);
+  background: var(--blanc);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
 h2,
 h3 {
   margin: 0;
-  font-family: var(--police-titre);
-  line-height: 1.2;
+  font-family: var(--titre);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -70,8 +76,16 @@ img {
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 button {
   font: inherit;
+  color: inherit;
+}
+
+/* Cible de focus visible et cohérente sur tout le site */
+:focus-visible {
+  outline: 2px solid var(--rouge);
+  outline-offset: 3px;
 }
