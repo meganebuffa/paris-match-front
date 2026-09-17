@@ -1,14 +1,19 @@
 import { Link } from 'react-router-dom'
+import styles from './ArticleCard.module.css'
 
 function ArticleCard({ slug, titre, chapo, auteur, image }) {
   return (
-    <article>
-      {image && <img src={image} alt="" width="400" />}
-      <h2>
-        <Link to={`/article/${slug}`}>{titre}</Link>
-      </h2>
-      {chapo && <p>{chapo}</p>}
-      {auteur && <p>Par {auteur}</p>}
+    <article className={styles.carte}>
+      {image && <img className={styles.image} src={image} alt="" />}
+      <div className={styles.contenu}>
+        <h2 className={styles.titre}>
+          <Link className={styles.lien} to={`/article/${slug}`}>
+            {titre}
+          </Link>
+        </h2>
+        {chapo && <p className={styles.chapo}>{chapo}</p>}
+        {auteur && <p className={styles.auteur}>Par {auteur}</p>}
+      </div>
     </article>
   )
 }

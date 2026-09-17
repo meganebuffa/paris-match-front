@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { client } from '../contentful'
 import ArticleCard from '../components/ArticleCard'
+import styles from './Home.module.css'
 
 function Home() {
   const [articles, setArticles] = useState([])
@@ -32,51 +33,63 @@ function Home() {
       : articles
 
   return (
-    <div>
-      <h1>Paris Match</h1>
+    <div className={styles.page}>
+      <h1 className={styles.titre}>Paris Match</h1>
 
       {statut === 'succes' && (
-        <div>
-          <button onClick={() => setFiltre('tous')} disabled={filtre === 'tous'}>
+        <div className={styles.filtres}>
+          <button
+            type="button"
+            className={styles.bouton}
+            aria-pressed={filtre === 'tous'}
+            onClick={() => setFiltre('tous')}
+          >
             Tous les articles
           </button>
           <button
+            type="button"
+            className={styles.bouton}
+            aria-pressed={filtre === 'aLaUne'}
             onClick={() => setFiltre('aLaUne')}
-            disabled={filtre === 'aLaUne'}
           >
             À la une
           </button>
         </div>
       )}
 
-      {statut === 'chargement' && <p>Chargement des articles...</p>}
+      {statut === 'chargement' && (
+        <p className={styles.message}>Chargement des articles...</p>
+      )}
 
       {statut === 'erreur' && (
-        <p>
+        <p className={styles.message}>
           Les articles n'ont pas pu être chargés. Merci de réessayer dans un
           instant.
         </p>
       )}
 
       {statut === 'succes' && articlesAffiches.length === 0 && (
-        <p>
+        <p className={styles.message}>
           {filtre === 'aLaUne'
             ? "Aucun article à la une pour le moment."
             : "Aucun article n'est publié pour le moment."}
         </p>
       )}
 
-      {statut === 'succes' &&
-        articlesAffiches.map((article) => (
-          <ArticleCard
-            key={article.sys.id}
-            slug={article.fields.slug}
-            titre={article.fields.titre}
-            chapo={article.fields.chapo}
-            auteur={article.fields.auteur?.fields?.nom}
-            image={article.fields.photoCouverture?.fields?.file?.url}
-          />
-        ))}
+      {statut === 'succes' && articlesAffiches.length > 0 && (
+        <div className={styles.liste}>
+          {articlesAffiches.map((article) => (
+            <ArticleCard
+              key={article.sys.id}
+              slug={article.fields.slug}
+              titre={article.fields.titre}
+              chapo={article.fields.chapo}
+              auteur={article.fields.auteur?.fields?.nom}
+              image={article.fields.photoCouverture?.fields?.file?.url}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

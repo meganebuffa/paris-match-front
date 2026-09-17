@@ -3,17 +3,18 @@ import { useParams, Link } from 'react-router-dom'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS } from '@contentful/rich-text-types'
 import { client } from '../contentful'
+import styles from './ArticleDetail.module.css'
 
 const options = {
   renderMark: {
-    [MARKS.BOLD]: (text) => <strong className="accent">{text}</strong>,
+    [MARKS.BOLD]: (text) => <strong className={styles.accent}>{text}</strong>,
   },
   renderNode: {
     [BLOCKS.HEADING_2]: (node, children) => (
-      <h2 className="article-subtitle">{children}</h2>
+      <h2 className={styles.sousTitre}>{children}</h2>
     ),
     [BLOCKS.PARAGRAPH]: (node, children) => (
-      <p className="article-body">{children}</p>
+      <p className={styles.paragraphe}>{children}</p>
     ),
   },
 }
@@ -56,13 +57,21 @@ function ContenuArticle({ slug }) {
     }
   }, [slug])
 
-  if (statut === 'chargement') return <p>Chargement de l'article...</p>
+  if (statut === 'chargement') {
+    return (
+      <div className={styles.page}>
+        <p className={styles.message}>Chargement de l'article...</p>
+      </div>
+    )
+  }
 
   if (statut === 'erreur') {
     return (
-      <div>
-        <Link to="/">Retour</Link>
-        <p>
+      <div className={styles.page}>
+        <Link className={styles.retour} to="/">
+          Retour
+        </Link>
+        <p className={styles.message}>
           Cet article n'a pas pu être chargé. Merci de réessayer dans un instant.
         </p>
       </div>
@@ -71,9 +80,13 @@ function ContenuArticle({ slug }) {
 
   if (statut === 'introuvable') {
     return (
-      <div>
-        <Link to="/">Retour</Link>
-        <p>Cet article n'existe pas ou n'est plus disponible.</p>
+      <div className={styles.page}>
+        <Link className={styles.retour} to="/">
+          Retour
+        </Link>
+        <p className={styles.message}>
+          Cet article n'existe pas ou n'est plus disponible.
+        </p>
       </div>
     )
   }
@@ -82,12 +95,16 @@ function ContenuArticle({ slug }) {
   const image = article.fields.photoCouverture?.fields?.file?.url
 
   return (
-    <div>
-      <Link to="/">Retour</Link>
-      <h1>{article.fields.titre}</h1>
-      {auteur && <p>Par {auteur}</p>}
-      {image && <img src={image} alt="" width="600" />}
-      {article.fields.chapo && <p>{article.fields.chapo}</p>}
+    <div className={styles.page}>
+      <Link className={styles.retour} to="/">
+        Retour
+      </Link>
+      <h1 className={styles.titre}>{article.fields.titre}</h1>
+      {auteur && <p className={styles.auteur}>Par {auteur}</p>}
+      {image && <img className={styles.image} src={image} alt="" />}
+      {article.fields.chapo && (
+        <p className={styles.chapo}>{article.fields.chapo}</p>
+      )}
       {article.fields.corps && (
         <div>{documentToReactComponents(article.fields.corps, options)}</div>
       )}

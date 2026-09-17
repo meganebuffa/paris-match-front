@@ -1,0 +1,44 @@
+.carte {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  background: var(--couleur-fond);
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.contenu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-s);
+  padding: var(--espace-m);
+}
+
+.titre {
+  font-size: 1.25rem;
+}
+
+.lien {
+  text-decoration: none;
+}
+
+.lien:hover {
+  text-decoration: underline;
+}
+
+.chapo {
+  color: var(--couleur-texte-doux);
+}
+
+.auteur {
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--couleur-texte-doux);
+}
