@@ -1,60 +1,119 @@
 .page {
-  max-width: var(--largeur-article);
+  max-width: 900px;
   margin: 0 auto;
-  padding: var(--espace-l) var(--espace-m);
+  padding: var(--espace-l) var(--espace-m) var(--espace-xl);
 }
 
 .retour {
   display: inline-block;
   margin-bottom: var(--espace-l);
-  color: var(--couleur-texte-doux);
-  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris-texte);
+  transition: color 0.2s ease;
 }
 
 .retour:hover {
-  text-decoration: underline;
+  color: var(--rouge);
+}
+
+/* --- En-tête de l'article ------------------------------------------------ */
+
+.entete {
+  max-width: var(--largeur-lecture);
+  margin: 0 auto var(--espace-l);
+  text-align: center;
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: var(--espace-m);
+  padding: 0.25rem 0.6rem;
+  background: var(--rouge);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blanc);
 }
 
 .titre {
-  font-size: 2.25rem;
-  margin-bottom: var(--espace-m);
+  font-size: clamp(1.9rem, 4.5vw, 3.1rem);
+  font-weight: 900;
 }
 
-.auteur {
-  margin-bottom: var(--espace-l);
-  font-size: 0.8125rem;
-  letter-spacing: 0.05em;
+.chapo {
+  margin-top: var(--espace-m);
+  font-family: var(--lecture);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--gris-texte);
+}
+
+.meta {
+  margin-top: var(--espace-l);
+  padding-top: var(--espace-m);
+  border-top: 1px solid var(--gris-bordure);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--couleur-texte-doux);
+  color: var(--gris-texte);
+}
+
+/* --- Photo ---------------------------------------------------------------- */
+
+.figure {
+  margin: 0 0 var(--espace-xl);
 }
 
 .image {
   width: 100%;
-  margin-bottom: var(--espace-l);
-  border-radius: var(--rayon);
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
 }
 
-.chapo {
-  margin-bottom: var(--espace-l);
-  font-size: 1.125rem;
-  font-weight: 600;
-}
+/* --- Corps du texte ------------------------------------------------------- */
 
-.message {
-  color: var(--couleur-texte-doux);
-}
-
-/* --- Classes appliquées au rich text Contentful ------------------------- */
-
-.accent {
-  color: var(--couleur-accent);
-}
-
-.sousTitre {
-  margin: var(--espace-l) 0 var(--espace-m);
-  font-size: 1.5rem;
+.corps {
+  max-width: var(--largeur-lecture);
+  margin: 0 auto;
+  font-family: var(--lecture);
+  font-size: 1.12rem;
+  line-height: 1.8;
 }
 
 .paragraphe {
   margin-bottom: var(--espace-m);
+}
+
+/* Lettrine sur le premier paragraphe — la signature typographique du magazine */
+.corps > .paragraphe:first-of-type::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-family: var(--titre);
+  font-size: 3.6em;
+  font-weight: 900;
+  line-height: 0.82;
+  color: var(--rouge);
+}
+
+.sousTitre {
+  margin: var(--espace-l) 0 var(--espace-m);
+  font-size: 1.6rem;
+}
+
+.accent {
+  color: var(--rouge);
+  font-weight: 700;
+}
+
+.message {
+  padding: var(--espace-xl) 0;
+  font-size: 1.05rem;
+  color: var(--gris-texte);
+  text-align: center;
 }

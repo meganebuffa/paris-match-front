@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS } from '@contentful/rich-text-types'
 import { client } from '../contentful'
+import { imageUrl, formatDate } from '../utils/format'
 import styles from './ArticleDetail.module.css'
 
 const options = {
@@ -25,6 +26,14 @@ function ArticleDetail() {
   // key={slug} : quand le slug change, React considère que c'est un nouveau
   // composant et remet tout son state à zéro. Pas besoin de le faire à la main.
   return <ContenuArticle key={slug} slug={slug} />
+}
+
+function Retour() {
+  return (
+    <Link className={styles.retour} to="/">
+      <span aria-hidden="true">←</span> Retour à la une
+    </Link>
+  )
 }
 
 function ContenuArticle({ slug }) {
@@ -60,7 +69,7 @@ function ContenuArticle({ slug }) {
   if (statut === 'chargement') {
     return (
       <div className={styles.page}>
-        <p className={styles.message}>Chargement de l'article...</p>
+        <p className={styles.message}>Chargement de l'article…</p>
       </div>
     )
   }
@@ -68,9 +77,7 @@ function ContenuArticle({ slug }) {
   if (statut === 'erreur') {
     return (
       <div className={styles.page}>
-        <Link className={styles.retour} to="/">
-          Retour
-        </Link>
+        <Retour />
         <p className={styles.message}>
           Cet article n'a pas pu être chargé. Merci de réessayer dans un instant.
         </p>
@@ -81,9 +88,7 @@ function ContenuArticle({ slug }) {
   if (statut === 'introuvable') {
     return (
       <div className={styles.page}>
-        <Link className={styles.retour} to="/">
-          Retour
-        </Link>
+        <Retour />
         <p className={styles.message}>
           Cet article n'existe pas ou n'est plus disponible.
         </p>
@@ -92,23 +97,45 @@ function ContenuArticle({ slug }) {
   }
 
   const auteur = article.fields.auteur?.fields?.nom
-  const image = article.fields.photoCouverture?.fields?.file?.url
+  const date = formatDate(article.fields.datePublication)
+  const image = imageUrl(
+    article.fields.photoCouverture?.fields?.file?.url,
+    1200,
+  )
 
   return (
-    <div className={styles.page}>
-      <Link className={styles.retour} to="/">
-        Retour
-      </Link>
-      <h1 className={styles.titre}>{article.fields.titre}</h1>
-      {auteur && <p className={styles.auteur}>Par {auteur}</p>}
-      {image && <img className={styles.image} src={image} alt="" />}
-      {article.fields.chapo && (
-        <p className={styles.chapo}>{article.fields.chapo}</p>
+    <article className={styles.page}>
+      <Retour />
+
+      <header className={styles.entete}>
+        {article.fields.aLaUne === true && (
+          <span className={styles.kicker}>À la une</span>
+        )}
+        <h1 className={styles.titre}>{article.fields.titre}</h1>
+        {article.fields.chapo && (
+          <p className={styles.chapo}>{article.fields.chapo}</p>
+        )}
+        {(auteur || date) && (
+          <p className={styles.meta}>
+            {auteur && <span>Par {auteur}</span>}
+            {auteur && date && <span aria-hidden="true"> · </span>}
+            {date && <span>{date}</span>}
+          </p>
+        )}
+      </header>
+
+      {image && (
+        <figure className={styles.figure}>
+          <img className={styles.image} src={image} alt="" />
+        </figure>
       )}
+
       {article.fields.corps && (
-        <div>{documentToReactComponents(article.fields.corps, options)}</div>
+        <div className={styles.corps}>
+          {documentToReactComponents(article.fields.corps, options)}
+        </div>
       )}
-    </div>
+    </article>
   )
 }
 
