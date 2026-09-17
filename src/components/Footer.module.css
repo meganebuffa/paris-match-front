@@ -1,0 +1,31 @@
+.pied {
+  margin-top: var(--espace-xl);
+  background: var(--noir);
+  color: var(--blanc);
+}
+
+.contenu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espace-m);
+  max-width: var(--largeur-site);
+  margin: 0 auto;
+  padding: var(--espace-l) var(--espace-m);
+}
+
+.marque {
+  font-family: var(--titre);
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mention {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
