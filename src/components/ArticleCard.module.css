@@ -1,44 +1,63 @@
 .carte {
   display: flex;
   flex-direction: column;
+  gap: 0.6rem;
+}
+
+.lien {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cadre {
+  position: relative;
   overflow: hidden;
-  border: 1px solid var(--couleur-bordure);
-  border-radius: var(--rayon);
-  background: var(--couleur-fond);
+  background: var(--gris-clair);
 }
 
 .image {
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
-.contenu {
-  display: flex;
-  flex-direction: column;
-  gap: var(--espace-s);
-  padding: var(--espace-m);
+.carte:hover .image {
+  transform: scale(1.04);
+}
+
+.kicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.22rem 0.55rem;
+  background: var(--rouge);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blanc);
 }
 
 .titre {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
+  transition: color 0.2s ease;
 }
 
-.lien {
-  text-decoration: none;
-}
-
-.lien:hover {
-  text-decoration: underline;
+.carte:hover .titre {
+  color: var(--rouge);
 }
 
 .chapo {
-  color: var(--couleur-texte-doux);
+  font-size: 0.92rem;
+  color: var(--gris-texte);
 }
 
-.auteur {
-  font-size: 0.8125rem;
-  letter-spacing: 0.05em;
+.meta {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--couleur-texte-doux);
+  color: var(--gris-texte);
 }
