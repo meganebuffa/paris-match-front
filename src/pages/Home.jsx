@@ -12,7 +12,13 @@ function Home() {
     // ne part qu'une fois ([] en dépendances), donc aucune requête concurrente
     // ne peut écraser le résultat d'une autre.
     client
-      .getEntries({ content_type: 'article' })
+      .getEntries({
+        content_type: 'article',
+        // Sans order explicite, Contentful ne garantit aucun tri. Le tri
+        // secondaire sur sys.createdAt rend l'ordre déterministe même si
+        // datePublication (champ optionnel) est absent sur un article.
+        order: '-fields.datePublication,-sys.createdAt',
+      })
       .then((response) => {
         setArticles(response.items)
         setStatut('succes')
