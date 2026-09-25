@@ -1,0 +1,37 @@
+.pied {
+  margin-top: var(--espace-xl);
+  border-top: 1px solid var(--bordure);
+  background: var(--fond-eleve);
+}
+
+.contenu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espace-m);
+  max-width: var(--largeur-site);
+  margin: 0 auto;
+  padding: var(--espace-l) var(--espace-m);
+}
+
+.marque {
+  font-family: var(--titre);
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.slogan {
+  font-family: var(--lecture);
+  font-style: italic;
+  color: var(--texte-doux);
+}
+
+.mention {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texte-faible);
+}

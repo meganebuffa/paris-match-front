@@ -1,0 +1,225 @@
+.page {
+  max-width: var(--largeur-site);
+  margin: 0 auto;
+  padding: var(--espace-l) var(--espace-m) var(--espace-xl);
+}
+
+/* Titre présent pour la structure du document et les lecteurs d'écran,
+   masqué visuellement : l'identité est déjà portée par le logo. */
+.titreCache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- États --------------------------------------------------------------- */
+
+.etat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espace-m);
+  padding: var(--espace-xl) 0;
+  text-align: center;
+}
+
+.message {
+  font-size: 1.05rem;
+  color: var(--texte-doux);
+}
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--bordure-forte);
+  border-top-color: var(--rouge);
+  border-radius: 50%;
+  animation: tourne 0.7s linear infinite;
+}
+
+@keyframes tourne {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.retourTous {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--bordure-forte);
+  border-radius: 999px;
+  background: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texte);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.retourTous:hover {
+  background: var(--rouge);
+  border-color: var(--rouge);
+}
+
+/* --- La une -------------------------------------------------------------- */
+
+.une {
+  position: relative;
+  display: block;
+  margin-bottom: var(--espace-xl);
+  overflow: hidden;
+  border-radius: 6px;
+  animation: monteeDouce 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.uneCadre {
+  position: relative;
+  background: var(--fond-carte);
+}
+
+.uneImage {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform var(--transition-lente);
+}
+
+.une:hover .uneImage {
+  transform: scale(1.04);
+}
+
+/* Voile dégradé : garantit la lisibilité du texte quelle que soit la photo. */
+.uneVoile {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 11, 0.96) 0%,
+    rgba(10, 10, 11, 0.7) 40%,
+    rgba(10, 10, 11, 0.1) 75%,
+    rgba(10, 10, 11, 0) 100%
+  );
+}
+
+.uneTexte {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--espace-xl) var(--espace-l) var(--espace-l);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: var(--espace-m);
+  padding: 0.28rem 0.65rem;
+  background: var(--rouge);
+  border-radius: 3px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.uneTitre {
+  max-width: 18ch;
+  font-size: clamp(2rem, 5.5vw, 4rem);
+  font-weight: 900;
+}
+
+.uneChapo {
+  max-width: 55ch;
+  margin-top: var(--espace-m);
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  color: var(--texte-doux);
+}
+
+.uneMeta {
+  margin-top: var(--espace-m);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texte-faible);
+}
+
+/* Le « Lire l'article » se décale vers la droite au survol. */
+.uneLire {
+  display: inline-block;
+  margin-top: var(--espace-m);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rouge);
+  transition: transform var(--transition);
+}
+
+.uneLire::after {
+  content: ' →';
+}
+
+.une:hover .uneLire {
+  transform: translateX(6px);
+}
+
+/* --- Section secondaire --------------------------------------------------- */
+
+.section {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--transition-lente),
+    transform var(--transition-lente);
+}
+
+/* Classe posée par le hook useReveal quand la section entre dans l'écran. */
+.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.sectionTitre {
+  display: flex;
+  align-items: center;
+  gap: var(--espace-m);
+  margin-bottom: var(--espace-l);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+}
+
+.sectionTitre::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bordure);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--espace-l);
+}
+
+@media (max-width: 640px) {
+  .uneImage {
+    aspect-ratio: 4 / 5;
+  }
+
+  .uneTexte {
+    padding: var(--espace-l) var(--espace-m) var(--espace-m);
+  }
+}

@@ -3,17 +3,19 @@ import { useParams, Link } from 'react-router-dom'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS } from '@contentful/rich-text-types'
 import { client } from '../contentful'
+import { imageUrl, formatDate } from '../utils/format'
+import styles from './ArticleDetail.module.css'
 
 const options = {
   renderMark: {
-    [MARKS.BOLD]: (text) => <strong className="accent">{text}</strong>,
+    [MARKS.BOLD]: (text) => <strong className={styles.accent}>{text}</strong>,
   },
   renderNode: {
     [BLOCKS.HEADING_2]: (node, children) => (
-      <h2 className="article-subtitle">{children}</h2>
+      <h2 className={styles.sousTitre}>{children}</h2>
     ),
     [BLOCKS.PARAGRAPH]: (node, children) => (
-      <p className="article-body">{children}</p>
+      <p className={styles.paragraphe}>{children}</p>
     ),
   },
 }
@@ -24,6 +26,14 @@ function ArticleDetail() {
   // key={slug} : quand le slug change, React considère que c'est un nouveau
   // composant et remet tout son state à zéro. Pas besoin de le faire à la main.
   return <ContenuArticle key={slug} slug={slug} />
+}
+
+function Retour() {
+  return (
+    <Link className={styles.retour} to="/">
+      <span aria-hidden="true">←</span> Retour à la une
+    </Link>
+  )
 }
 
 function ContenuArticle({ slug }) {
@@ -56,13 +66,22 @@ function ContenuArticle({ slug }) {
     }
   }, [slug])
 
-  if (statut === 'chargement') return <p>Chargement de l'article...</p>
+  if (statut === 'chargement') {
+    return (
+      <div className={styles.page}>
+        <div className={styles.etat}>
+          <span className={styles.spinner} aria-hidden="true" />
+          <p className={styles.message}>Chargement de l'article…</p>
+        </div>
+      </div>
+    )
+  }
 
   if (statut === 'erreur') {
     return (
-      <div>
-        <Link to="/">Retour</Link>
-        <p>
+      <div className={styles.page}>
+        <Retour />
+        <p className={styles.message}>
           Cet article n'a pas pu être chargé. Merci de réessayer dans un instant.
         </p>
       </div>
@@ -71,27 +90,55 @@ function ContenuArticle({ slug }) {
 
   if (statut === 'introuvable') {
     return (
-      <div>
-        <Link to="/">Retour</Link>
-        <p>Cet article n'existe pas ou n'est plus disponible.</p>
+      <div className={styles.page}>
+        <Retour />
+        <p className={styles.message}>
+          Cet article n'existe pas ou n'est plus disponible.
+        </p>
       </div>
     )
   }
 
   const auteur = article.fields.auteur?.fields?.nom
-  const image = article.fields.photoCouverture?.fields?.file?.url
+  const date = formatDate(article.fields.datePublication)
+  const image = imageUrl(
+    article.fields.photoCouverture?.fields?.file?.url,
+    1200,
+  )
 
   return (
-    <div>
-      <Link to="/">Retour</Link>
-      <h1>{article.fields.titre}</h1>
-      {auteur && <p>Par {auteur}</p>}
-      {image && <img src={image} alt="" width="600" />}
-      {article.fields.chapo && <p>{article.fields.chapo}</p>}
-      {article.fields.corps && (
-        <div>{documentToReactComponents(article.fields.corps, options)}</div>
+    <article className={styles.page}>
+      <Retour />
+
+      <header className={styles.entete}>
+        {article.fields.aLaUne === true && (
+          <span className={styles.kicker}>À la une</span>
+        )}
+        <h1 className={styles.titre}>{article.fields.titre}</h1>
+        {article.fields.chapo && (
+          <p className={styles.chapo}>{article.fields.chapo}</p>
+        )}
+        {(auteur || date) && (
+          <p className={styles.meta}>
+            {auteur && <span>Par {auteur}</span>}
+            {auteur && date && <span aria-hidden="true"> · </span>}
+            {date && <span>{date}</span>}
+          </p>
+        )}
+      </header>
+
+      {image && (
+        <figure className={styles.figure}>
+          <img className={styles.image} src={image} alt="" />
+        </figure>
       )}
-    </div>
+
+      {article.fields.corps && (
+        <div className={styles.corps}>
+          {documentToReactComponents(article.fields.corps, options)}
+        </div>
+      )}
+    </article>
   )
 }
 

@@ -1,0 +1,175 @@
+.entete {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 10, 11, 0.72);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+/* Appliquée au scroll : l'en-tête se détache du contenu qui passe dessous. */
+.compacte {
+  background: rgba(10, 10, 11, 0.94);
+  border-bottom-color: var(--bordure);
+}
+
+.barre {
+  display: flex;
+  align-items: center;
+  gap: var(--espace-l);
+  max-width: var(--largeur-site);
+  height: var(--hauteur-entete);
+  margin: 0 auto;
+  padding: 0 var(--espace-m);
+}
+
+/* --- Logo ---------------------------------------------------------------- */
+
+.logo {
+  flex-shrink: 0;
+  padding: 0.28rem 0.7rem;
+  background: var(--rouge);
+  transition: transform var(--transition);
+}
+
+.logo:hover {
+  transform: scale(1.04);
+}
+
+.logoTexte {
+  font-family: var(--titre);
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* --- Navigation ---------------------------------------------------------- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--espace-l);
+}
+
+.lienNav {
+  position: relative;
+  padding: 0.4rem 0;
+  border: 0;
+  background: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+  cursor: pointer;
+  transition: color var(--transition);
+  white-space: nowrap;
+}
+
+/* Le soulignement grandit depuis la gauche au survol. */
+.lienNav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--rouge);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+
+.lienNav:hover {
+  color: var(--texte);
+}
+
+.lienNav:hover::after,
+.lienNav[aria-current='true']::after {
+  transform: scaleX(1);
+}
+
+.lienNav[aria-current='true'] {
+  color: var(--texte);
+}
+
+/* --- Burger (mobile) ------------------------------------------------------ */
+
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.trait {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--texte);
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+/* Les deux traits se croisent pour former une croix. */
+.traitA {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.traitB {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+@media (max-width: 820px) {
+  .burger {
+    display: flex;
+  }
+
+  .nav {
+    position: absolute;
+    top: var(--hauteur-entete);
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 var(--espace-m);
+    max-height: 0;
+    overflow: hidden;
+    background: var(--fond-eleve);
+    border-bottom: 1px solid transparent;
+    transition:
+      max-height var(--transition-lente),
+      padding var(--transition),
+      border-color var(--transition);
+  }
+
+  .navOuverte {
+    max-height: 60vh;
+    padding: var(--espace-s) var(--espace-m) var(--espace-m);
+    border-bottom-color: var(--bordure);
+  }
+
+  .lienNav {
+    width: 100%;
+    padding: var(--espace-m) 0;
+    text-align: left;
+    border-bottom: 1px solid var(--bordure);
+  }
+
+  .lienNav::after {
+    display: none;
+  }
+}
