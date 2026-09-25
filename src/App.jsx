@@ -17,7 +17,13 @@ function App() {
   // parent commun — c'est ce que React appelle « lifting state up ».
   useEffect(() => {
     client
-      .getEntries({ content_type: 'article' })
+      .getEntries({
+        content_type: 'article',
+        // Sans order explicite, Contentful ne garantit aucun tri. Le tri
+        // secondaire sur sys.createdAt rend l'ordre déterministe même si
+        // datePublication (champ optionnel) est absent sur un article.
+        order: '-fields.datePublication,-sys.createdAt',
+      })
       .then((response) => {
         setArticles(response.items)
         setStatut('succes')
