@@ -1,7 +1,8 @@
 .page {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   padding: var(--espace-l) var(--espace-m) var(--espace-xl);
+  animation: monteeDouce 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .retour {
@@ -11,15 +12,18 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gris-texte);
-  transition: color 0.2s ease;
+  color: var(--texte-doux);
+  transition:
+    color var(--transition),
+    transform var(--transition);
 }
 
 .retour:hover {
   color: var(--rouge);
+  transform: translateX(-4px);
 }
 
-/* --- En-tête de l'article ------------------------------------------------ */
+/* --- En-tête de l'article ------------------------------------------------- */
 
 .entete {
   max-width: var(--largeur-lecture);
@@ -30,17 +34,18 @@
 .kicker {
   display: inline-block;
   margin-bottom: var(--espace-m);
-  padding: 0.25rem 0.6rem;
+  padding: 0.28rem 0.65rem;
   background: var(--rouge);
+  border-radius: 3px;
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--blanc);
+  color: #fff;
 }
 
 .titre {
-  font-size: clamp(1.9rem, 4.5vw, 3.1rem);
+  font-size: clamp(2rem, 5vw, 3.4rem);
   font-weight: 900;
 }
 
@@ -50,24 +55,26 @@
   font-size: 1.15rem;
   font-style: italic;
   line-height: 1.6;
-  color: var(--gris-texte);
+  color: var(--texte-doux);
 }
 
 .meta {
   margin-top: var(--espace-l);
   padding-top: var(--espace-m);
-  border-top: 1px solid var(--gris-bordure);
+  border-top: 1px solid var(--bordure);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gris-texte);
+  color: var(--texte-faible);
 }
 
 /* --- Photo ---------------------------------------------------------------- */
 
 .figure {
   margin: 0 0 var(--espace-xl);
+  overflow: hidden;
+  border-radius: 6px;
 }
 
 .image {
@@ -76,21 +83,22 @@
   object-fit: cover;
 }
 
-/* --- Corps du texte ------------------------------------------------------- */
+/* --- Corps du texte -------------------------------------------------------- */
 
 .corps {
   max-width: var(--largeur-lecture);
   margin: 0 auto;
   font-family: var(--lecture);
   font-size: 1.12rem;
-  line-height: 1.8;
+  line-height: 1.85;
+  color: #e4e4e8;
 }
 
 .paragraphe {
   margin-bottom: var(--espace-m);
 }
 
-/* Lettrine sur le premier paragraphe — la signature typographique du magazine */
+/* Lettrine sur le premier paragraphe — signature typographique du magazine. */
 .corps > .paragraphe:first-of-type::first-letter {
   float: left;
   margin: 0.08em 0.1em 0 0;
@@ -111,9 +119,31 @@
   font-weight: 700;
 }
 
-.message {
+.etat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espace-m);
   padding: var(--espace-xl) 0;
-  font-size: 1.05rem;
-  color: var(--gris-texte);
   text-align: center;
+}
+
+.message {
+  font-size: 1.05rem;
+  color: var(--texte-doux);
+}
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--bordure-forte);
+  border-top-color: var(--rouge);
+  border-radius: 50%;
+  animation: tourne 0.7s linear infinite;
+}
+
+@keyframes tourne {
+  to {
+    transform: rotate(360deg);
+  }
 }

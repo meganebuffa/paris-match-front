@@ -1,50 +1,40 @@
-import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { client } from '../contentful'
 import ArticleCard from '../components/ArticleCard'
 import { imageUrl, formatDate } from '../utils/format'
+import { useReveal } from '../hooks/useReveal'
 import styles from './Home.module.css'
 
-function Home() {
-  const [articles, setArticles] = useState([])
-  const [statut, setStatut] = useState('chargement')
-  const [filtre, setFiltre] = useState('tous')
+/** Applique le filtre actif du menu à la liste complète. */
+function filtrer(articles, filtre) {
+  if (filtre === 'aLaUne') {
+    // aLaUne est un champ optionnel : il vaut undefined sur les articles
+    // jamais cochés, d'où le === true explicite.
+    return articles.filter((article) => article.fields.aLaUne === true)
+  }
+  if (filtre.startsWith('auteur:')) {
+    const nom = filtre.slice('auteur:'.length)
+    return articles.filter(
+      (article) => article.fields.auteur?.fields?.nom === nom,
+    )
+  }
+  return articles
+}
 
-  useEffect(() => {
-    // Pas de drapeau d'annulation ici, contrairement à ArticleDetail : l'effet
-    // ne part qu'une fois ([] en dépendances), donc aucune requête concurrente
-    // ne peut écraser le résultat d'une autre.
-    client
-      .getEntries({ content_type: 'article' })
-      .then((response) => {
-        setArticles(response.items)
-        setStatut('succes')
-      })
-      .catch((error) => {
-        console.error(error)
-        setStatut('erreur')
-      })
-  }, [])
-
+function Home({ articles, statut, filtre, onFiltre }) {
   // Valeur dérivée, pas un state : elle se recalcule à chaque rendu à partir
-  // de `articles` et `filtre`. aLaUne est un champ optionnel, donc absent
-  // (undefined) sur les articles jamais cochés — d'où le === true explicite.
-  const articlesAffiches =
-    filtre === 'aLaUne'
-      ? articles.filter((article) => article.fields.aLaUne === true)
-      : articles
+  // de `articles` et `filtre`. Un state en plus créerait deux sources de
+  // vérité pouvant se désynchroniser.
+  const affiches = filtrer(articles, filtre)
 
   // La une revient à l'article coché par la rédaction. À défaut, le premier
   // de la liste prend la place : la page garde toujours sa tête d'affiche.
   const une =
-    articlesAffiches.find((article) => article.fields.aLaUne === true) ??
-    articlesAffiches[0]
-  const secondaires = articlesAffiches.filter((article) => article !== une)
+    affiches.find((article) => article.fields.aLaUne === true) ?? affiches[0]
+  const secondaires = affiches.filter((article) => article !== une)
 
-  const uneImage = imageUrl(
-    une?.fields.photoCouverture?.fields?.file?.url,
-    1400,
-  )
+  const [refSection, sectionVisible] = useReveal()
+
+  const uneImage = imageUrl(une?.fields.photoCouverture?.fields?.file?.url, 1600)
   const uneAuteur = une?.fields.auteur?.fields?.nom
   const uneDate = formatDate(une?.fields.datePublication)
 
@@ -52,47 +42,51 @@ function Home() {
     <div className={styles.page}>
       <h1 className={styles.titreCache}>Paris Match — l'actualité en continu</h1>
 
-      <nav className={styles.filtres} aria-label="Filtrer les articles">
-        <button
-          type="button"
-          className={styles.bouton}
-          aria-pressed={filtre === 'tous'}
-          onClick={() => setFiltre('tous')}
-        >
-          Tous les articles
-        </button>
-        <button
-          type="button"
-          className={styles.bouton}
-          aria-pressed={filtre === 'aLaUne'}
-          onClick={() => setFiltre('aLaUne')}
-        >
-          À la une
-        </button>
-      </nav>
-
       {statut === 'chargement' && (
-        <p className={styles.message}>Chargement des articles…</p>
+        <div className={styles.etat}>
+          <span className={styles.spinner} aria-hidden="true" />
+          <p className={styles.message}>Chargement des articles…</p>
+        </div>
       )}
 
       {statut === 'erreur' && (
-        <p className={styles.message}>
-          Les articles n'ont pas pu être chargés. Merci de réessayer dans un
-          instant.
-        </p>
+        <div className={styles.etat}>
+          <p className={styles.message}>
+            Les articles n'ont pas pu être chargés. Merci de réessayer dans un
+            instant.
+          </p>
+        </div>
       )}
 
-      {statut === 'succes' && articlesAffiches.length === 0 && (
-        <p className={styles.message}>
-          {filtre === 'aLaUne'
-            ? 'Aucun article à la une pour le moment.'
-            : "Aucun article n'est publié pour le moment."}
-        </p>
+      {statut === 'succes' && affiches.length === 0 && (
+        <div className={styles.etat}>
+          <p className={styles.message}>
+            {filtre === 'aLaUne'
+              ? 'Aucun article à la une pour le moment.'
+              : filtre.startsWith('auteur:')
+                ? `Aucun article signé ${filtre.slice('auteur:'.length)}.`
+                : "Aucun article n'est publié pour le moment."}
+          </p>
+          {filtre !== 'tous' && (
+            <button
+              type="button"
+              className={styles.retourTous}
+              onClick={() => onFiltre('tous')}
+            >
+              Voir tous les articles
+            </button>
+          )}
+        </div>
       )}
 
       {statut === 'succes' && une && (
         <Link to={`/article/${une.fields.slug}`} className={styles.une}>
-          {uneImage && <img className={styles.uneImage} src={uneImage} alt="" />}
+          <div className={styles.uneCadre}>
+            {uneImage && (
+              <img className={styles.uneImage} src={uneImage} alt="" />
+            )}
+            <div className={styles.uneVoile} />
+          </div>
           <div className={styles.uneTexte}>
             {une.fields.aLaUne === true && (
               <span className={styles.kicker}>À la une</span>
@@ -108,17 +102,22 @@ function Home() {
                 {uneDate && <span>{uneDate}</span>}
               </p>
             )}
+            <span className={styles.uneLire}>Lire l'article</span>
           </div>
         </Link>
       )}
 
       {statut === 'succes' && secondaires.length > 0 && (
-        <section>
+        <section
+          ref={refSection}
+          className={`${styles.section} ${sectionVisible ? styles.visible : ''}`}
+        >
           <h2 className={styles.sectionTitre}>À lire aussi</h2>
           <div className={styles.grille}>
-            {secondaires.map((article) => (
+            {secondaires.map((article, index) => (
               <ArticleCard
                 key={article.sys.id}
+                index={index}
                 slug={article.fields.slug}
                 titre={article.fields.titre}
                 chapo={article.fields.chapo}

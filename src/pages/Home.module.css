@@ -5,7 +5,7 @@
 }
 
 /* Titre présent pour la structure du document et les lecteurs d'écran,
-   mais masqué visuellement : l'identité est déjà portée par le logo. */
+   masqué visuellement : l'identité est déjà portée par le logo. */
 .titreCache {
   position: absolute;
   width: 1px;
@@ -17,39 +17,56 @@
   white-space: nowrap;
 }
 
-/* --- Onglets de filtre --------------------------------------------------- */
+/* --- États --------------------------------------------------------------- */
 
-.filtres {
+.etat {
   display: flex;
-  gap: var(--espace-l);
-  border-bottom: 1px solid var(--gris-bordure);
-  margin-bottom: var(--espace-l);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espace-m);
+  padding: var(--espace-xl) 0;
+  text-align: center;
 }
 
-.bouton {
-  padding: 0 0 0.7rem;
-  margin-bottom: -1px;
-  border: 0;
-  border-bottom: 3px solid transparent;
+.message {
+  font-size: 1.05rem;
+  color: var(--texte-doux);
+}
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--bordure-forte);
+  border-top-color: var(--rouge);
+  border-radius: 50%;
+  animation: tourne 0.7s linear infinite;
+}
+
+@keyframes tourne {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.retourTous {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--bordure-forte);
+  border-radius: 999px;
   background: none;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gris-texte);
+  color: var(--texte);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
-.bouton:hover {
-  color: var(--noir);
-}
-
-/* L'état actif est porté par aria-pressed : l'information existe dans le HTML
-   (donc annoncée aux lecteurs d'écran), le CSS ne fait que la rendre visible. */
-.bouton[aria-pressed='true'] {
-  color: var(--noir);
-  border-bottom-color: var(--rouge);
+.retourTous:hover {
+  background: var(--rouge);
+  border-color: var(--rouge);
 }
 
 /* --- La une -------------------------------------------------------------- */
@@ -59,22 +76,37 @@
   display: block;
   margin-bottom: var(--espace-xl);
   overflow: hidden;
-  background: var(--noir);
+  border-radius: 6px;
+  animation: monteeDouce 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.uneCadre {
+  position: relative;
+  background: var(--fond-carte);
 }
 
 .uneImage {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  opacity: 0.8;
-  transition:
-    transform 0.6s ease,
-    opacity 0.3s ease;
+  transition: transform var(--transition-lente);
 }
 
 .une:hover .uneImage {
-  transform: scale(1.03);
-  opacity: 0.65;
+  transform: scale(1.04);
+}
+
+/* Voile dégradé : garantit la lisibilité du texte quelle que soit la photo. */
+.uneVoile {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 11, 0.96) 0%,
+    rgba(10, 10, 11, 0.7) 40%,
+    rgba(10, 10, 11, 0.1) 75%,
+    rgba(10, 10, 11, 0) 100%
+  );
 }
 
 .uneTexte {
@@ -83,50 +115,78 @@
   bottom: 0;
   left: 0;
   padding: var(--espace-xl) var(--espace-l) var(--espace-l);
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(0, 0, 0, 0.55) 45%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  color: var(--blanc);
 }
 
 .kicker {
   display: inline-block;
-  margin-bottom: var(--espace-s);
-  padding: 0.25rem 0.6rem;
+  margin-bottom: var(--espace-m);
+  padding: 0.28rem 0.65rem;
   background: var(--rouge);
-  font-size: 0.68rem;
+  border-radius: 3px;
+  font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: #fff;
 }
 
 .uneTitre {
-  max-width: 20ch;
-  font-size: clamp(1.8rem, 5vw, 3.6rem);
+  max-width: 18ch;
+  font-size: clamp(2rem, 5.5vw, 4rem);
   font-weight: 900;
-  color: var(--blanc);
 }
 
 .uneChapo {
   max-width: 55ch;
   margin-top: var(--espace-m);
-  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-  color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  color: var(--texte-doux);
 }
 
 .uneMeta {
   margin-top: var(--espace-m);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--texte-faible);
 }
 
-/* --- Section secondaire -------------------------------------------------- */
+/* Le « Lire l'article » se décale vers la droite au survol. */
+.uneLire {
+  display: inline-block;
+  margin-top: var(--espace-m);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rouge);
+  transition: transform var(--transition);
+}
+
+.uneLire::after {
+  content: ' →';
+}
+
+.une:hover .uneLire {
+  transform: translateX(6px);
+}
+
+/* --- Section secondaire --------------------------------------------------- */
+
+.section {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--transition-lente),
+    transform var(--transition-lente);
+}
+
+/* Classe posée par le hook useReveal quand la section entre dans l'écran. */
+.visible {
+  opacity: 1;
+  transform: none;
+}
 
 .sectionTitre {
   display: flex;
@@ -134,30 +194,24 @@
   gap: var(--espace-m);
   margin-bottom: var(--espace-l);
   font-family: var(--sans);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+  color: var(--texte-doux);
 }
 
 .sectionTitre::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--gris-bordure);
+  background: var(--bordure);
 }
 
 .grille {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--espace-l);
-}
-
-.message {
-  padding: var(--espace-xl) 0;
-  font-size: 1.05rem;
-  color: var(--gris-texte);
-  text-align: center;
 }
 
 @media (max-width: 640px) {

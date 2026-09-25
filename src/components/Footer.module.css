@@ -1,7 +1,7 @@
 .pied {
   margin-top: var(--espace-xl);
-  background: var(--noir);
-  color: var(--blanc);
+  border-top: 1px solid var(--bordure);
+  background: var(--fond-eleve);
 }
 
 .contenu {
@@ -23,9 +23,15 @@
   text-transform: uppercase;
 }
 
+.slogan {
+  font-family: var(--lecture);
+  font-style: italic;
+  color: var(--texte-doux);
+}
+
 .mention {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--texte-faible);
 }

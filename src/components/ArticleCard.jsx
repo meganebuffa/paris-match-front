@@ -2,29 +2,38 @@ import { Link } from 'react-router-dom'
 import { imageUrl, formatDate } from '../utils/format'
 import styles from './ArticleCard.module.css'
 
-function ArticleCard({ slug, titre, chapo, auteur, image, date, aLaUne }) {
-  const source = imageUrl(image, 700)
+function ArticleCard({ index = 0, slug, titre, chapo, auteur, image, date, aLaUne }) {
+  const source = imageUrl(image, 800)
   const dateLisible = formatDate(date)
 
   return (
-    <article className={styles.carte}>
+    <article
+      className={styles.carte}
+      // Chaque carte démarre son animation un cran après la précédente :
+      // les cartes apparaissent en cascade plutôt que toutes d'un bloc.
+      style={{ '--retard': `${index * 90}ms` }}
+    >
       <Link to={`/article/${slug}`} className={styles.lien}>
-        {source && (
-          <div className={styles.cadre}>
+        <div className={styles.cadre}>
+          {source ? (
             <img className={styles.image} src={source} alt="" loading="lazy" />
-            {aLaUne && <span className={styles.kicker}>À la une</span>}
-          </div>
-        )}
-        <h3 className={styles.titre}>{titre}</h3>
+          ) : (
+            <div className={styles.imageVide} aria-hidden="true" />
+          )}
+          {aLaUne && <span className={styles.kicker}>À la une</span>}
+        </div>
+        <div className={styles.contenu}>
+          <h3 className={styles.titre}>{titre}</h3>
+          {chapo && <p className={styles.chapo}>{chapo}</p>}
+          {(auteur || dateLisible) && (
+            <p className={styles.meta}>
+              {auteur && <span>Par {auteur}</span>}
+              {auteur && dateLisible && <span aria-hidden="true"> · </span>}
+              {dateLisible && <span>{dateLisible}</span>}
+            </p>
+          )}
+        </div>
       </Link>
-      {chapo && <p className={styles.chapo}>{chapo}</p>}
-      {(auteur || dateLisible) && (
-        <p className={styles.meta}>
-          {auteur && <span>Par {auteur}</span>}
-          {auteur && dateLisible && <span aria-hidden="true"> · </span>}
-          {dateLisible && <span>{dateLisible}</span>}
-        </p>
-      )}
     </article>
   )
 }

@@ -69,7 +69,10 @@ function ContenuArticle({ slug }) {
   if (statut === 'chargement') {
     return (
       <div className={styles.page}>
-        <p className={styles.message}>Chargement de l'article…</p>
+        <div className={styles.etat}>
+          <span className={styles.spinner} aria-hidden="true" />
+          <p className={styles.message}>Chargement de l'article…</p>
+        </div>
       </div>
     )
   }

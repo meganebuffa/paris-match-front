@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Identité et base
+   Identité et base — thème sombre
 
    Toutes les valeurs du site partent d'ici. Les composants ne contiennent
    aucune couleur ni taille en dur : ils piochent dans ces variables.
@@ -7,13 +7,19 @@
 
 :root {
   /* --- Couleurs -------------------------------------------------------- */
-  --rouge: #e2001a;
-  --rouge-sombre: #b30015;
-  --noir: #111111;
-  --blanc: #ffffff;
-  --gris-texte: #555555;
-  --gris-clair: #f5f5f5;
-  --gris-bordure: #dddddd;
+  --rouge: #ff1f3d;
+  --rouge-sombre: #c70f28;
+
+  --fond: #0a0a0b;
+  --fond-eleve: #141417;
+  --fond-carte: #1a1a1f;
+
+  --texte: #f2f2f4;
+  --texte-doux: #a1a1aa;
+  --texte-faible: #6b6b75;
+
+  --bordure: rgba(255, 255, 255, 0.09);
+  --bordure-forte: rgba(255, 255, 255, 0.18);
 
   /* --- Typographie ------------------------------------------------------ */
   --titre: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -25,11 +31,16 @@
   --espace-s: 0.5rem;
   --espace-m: 1rem;
   --espace-l: 2rem;
-  --espace-xl: 3.5rem;
+  --espace-xl: 4rem;
 
   /* --- Mise en page ----------------------------------------------------- */
-  --largeur-site: 1180px;
+  --largeur-site: 1240px;
   --largeur-lecture: 680px;
+  --hauteur-entete: 68px;
+
+  /* --- Mouvement -------------------------------------------------------- */
+  --transition: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-lente: 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* --- Reset ------------------------------------------------------------- */
@@ -42,6 +53,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -49,8 +61,8 @@ body {
   font-family: var(--sans);
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--noir);
-  background: var(--blanc);
+  color: var(--texte);
+  background: var(--fond);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -60,8 +72,8 @@ h3 {
   margin: 0;
   font-family: var(--titre);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
 }
 
 p {
@@ -84,8 +96,42 @@ button {
   color: inherit;
 }
 
-/* Cible de focus visible et cohérente sur tout le site */
+::selection {
+  background: var(--rouge);
+  color: #fff;
+}
+
 :focus-visible {
   outline: 2px solid var(--rouge);
   outline-offset: 3px;
+}
+
+/* --- Animations partagées ------------------------------------------------ */
+
+@keyframes monteeDouce {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respecte le réglage système « réduire les animations ».
+   Ce n'est pas un détail : les animations peuvent provoquer des malaises
+   chez les personnes sensibles au mouvement. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
